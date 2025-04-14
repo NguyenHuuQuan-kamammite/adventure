@@ -15,6 +15,7 @@ public class PlayerJumpState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        
     }
     public override void Update()
     {

@@ -5,12 +5,17 @@ public class Player : MonoBehaviour
     [Header("Move Info")]
     public float moveSpeed = 12f;
     public float jumpForce ;
+    public float dashSpeed ;
+    public float dashDuration ;
     [Header("Colision Info")]
     [SerializeField] private Transform groundLayer;
     [SerializeField] private float groundCheckDistance ;
     [SerializeField] private Transform wallCheck;
     [SerializeField] private float wallCheckDistance ;
     [SerializeField] private LayerMask WhatisGround;
+
+    public int isFacingDir { get; private set; } = 1;
+    private bool facingRight = true;
 
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
@@ -21,6 +26,7 @@ public class Player : MonoBehaviour
     public PlayerMoveState moveState { get; private set; }
     public PlayerAirState airState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
+    public PlayerDashState dashState { get; private set; }
     #endregion
 
     private void Awake()
@@ -30,6 +36,7 @@ public class Player : MonoBehaviour
         moveState = new PlayerMoveState(stateMachine, this, "Move");
         jumpState = new PlayerJumpState(stateMachine, this, "Jump");
         airState = new PlayerAirState(stateMachine, this, "Jump");
+        dashState = new PlayerDashState(stateMachine, this, "Dash");
     }
 
     private void Start()
@@ -42,6 +49,8 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.Update();
+        FlipController(rb.linearVelocity.x); 
+        
     }
 
 public void SetVelocity(float velocityX, float velocityY)
@@ -57,5 +66,22 @@ public bool IsGroundDeteced() => Physics2D.Raycast(groundLayer.position, Vector2
        Gizmos.color = Color.blue;
       Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance , wallCheck.position.y));
     }
+    public void Flip()
+    {
+        isFacingDir = isFacingDir * -1;
+        facingRight = !facingRight;
+        transform.Rotate(0f, 180f, 0f);
+    }
 
+    public void FlipController(float _x)
+    {
+        if(_x > 0 && !facingRight)
+        {
+            Flip();
+        }
+        else if(_x < 0 && facingRight)
+        {
+            Flip();
+        }
+    }
 }
