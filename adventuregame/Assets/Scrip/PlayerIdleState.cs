@@ -21,6 +21,11 @@ public class PlayerIdleState : PlayerGroundState
             
             stateMachine.ChangeState(player.moveState);
         }
+        if(xInput == player.isFacingDir && player.IsWallDetected())
+        {
+            return;
+            
+        }
   
        
     }

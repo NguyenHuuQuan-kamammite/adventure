@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     public PlayerAirState airState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerDashState dashState { get; private set; }
+    public PlayerWallSlideState wallSlideState { get; private set; }
     #endregion
 
     private void Awake()
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
         jumpState = new PlayerJumpState(stateMachine, this, "Jump");
         airState = new PlayerAirState(stateMachine, this, "Jump");
         dashState = new PlayerDashState(stateMachine, this, "Dash");
+        wallSlideState = new PlayerWallSlideState(stateMachine, this, "WallSlide");
     }
 
     private void Start()
@@ -48,6 +50,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         stateMachine.Initialize(idleState);
+
     }
 
     private void Update()
@@ -55,6 +58,7 @@ public class Player : MonoBehaviour
         stateMachine.currentState.Update();
         FlipController(rb.linearVelocity.x); 
         CheckForDashInput();
+     
         
     }
     private void CheckForDashInput()
@@ -77,6 +81,7 @@ public void SetVelocity(float velocityX, float velocityY)
         rb.linearVelocity= new Vector2(velocityX, velocityY);
     }
 public bool IsGroundDeteced() => Physics2D.Raycast(groundLayer.position, Vector2.down, groundCheckDistance, WhatisGround);
+public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * isFacingDir, wallCheckDistance, WhatisGround);
     
     private void OnDrawGizmos()
     {
