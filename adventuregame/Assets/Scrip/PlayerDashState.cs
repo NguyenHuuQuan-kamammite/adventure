@@ -27,6 +27,11 @@ public class PlayerDashState : PlayerState
         {
             stateMachine.ChangeState(player.idleState);
         }
+        if(!player.IsGroundDeteced() && player.IsWallDetected())
+        {
+            stateMachine.ChangeState(player.wallSlideState);
+        }
+
 
     }
 

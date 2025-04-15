@@ -19,12 +19,15 @@ public class PlayerWallSlideState : PlayerState
     public override void Update()
     {
         base.Update();
-        if(xInput != 0)
+        if(Input.GetKeyDown(KeyCode.Space) )
         {
-           if(player.isFacingDir != xInput)
-            {
-               stateMachine.ChangeState(player.idleState);
-            }
+            stateMachine.ChangeState(player.wallJump);
+
+            return;
+        }
+        if(xInput != 0 && player.isFacingDir != xInput)
+        {
+            stateMachine.ChangeState(player.idleState);
         }
         if(yInput<0)
         {

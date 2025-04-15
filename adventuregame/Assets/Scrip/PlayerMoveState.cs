@@ -6,8 +6,7 @@ public class PlayerMoveState : PlayerGroundState
     {
         
     }
-
-    public override void Enter()
+        public override void Enter()
     {
         base.Enter();
 
@@ -17,11 +16,13 @@ public class PlayerMoveState : PlayerGroundState
     public override void Update()
     {
         base.Update();
+        
         player.SetVelocity( xInput* player.moveSpeed, rb.linearVelocity.y);
-        if (xInput == 0)
+        if (xInput == 0 )
         {
             stateMachine.ChangeState(player.idleState);
         }
+        
        
         
     }
