@@ -10,17 +10,17 @@ public class PlayerIdleState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        rb.linearVelocity = new Vector2(0,0);
+        player.ZeroVelocity();
         
     }
     public override void Update()
     {
         base.Update();
-        if (xInput != 0)
+        if (xInput != 0 && !player.isBussy)
         {
-            
             stateMachine.ChangeState(player.moveState);
         }
+     
         if(xInput == player.isFacingDir && player.IsWallDetected())
         {
             return;

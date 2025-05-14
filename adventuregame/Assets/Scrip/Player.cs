@@ -1,7 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [Header("Attack Details")]
+    public Vector2[] attackMovement ;
+    public bool isBussy { get; private set; }
     [Header("Move Info")]
     public float moveSpeed = 12f;
     public float jumpForce ;
@@ -55,16 +59,26 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         stateMachine.Initialize(idleState);
+        
 
     }
+    
 
     private void Update()
     {
         stateMachine.currentState.Update();
         FlipController(rb.linearVelocity.x); 
         CheckForDashInput();
-     
+           
         
+    }
+    public IEnumerator BusyFor(float _sec)
+    {
+        isBussy = true;
+     
+        yield return new WaitForSeconds(_sec);
+        isBussy = false;
+     
     }
     private void CheckForDashInput()
     {   
@@ -85,11 +99,23 @@ public class Player : MonoBehaviour
         }
     }
     public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
-   
-    
+
+
+public void ZeroVelocity()
+    {
+        rb.linearVelocity = new Vector2(0, 0);
+    }
 public void SetVelocity(float velocityX, float velocityY)
     {
         rb.linearVelocity= new Vector2(velocityX, velocityY);
+    }
+#region Colision
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+        }
     }
 public bool IsGroundDeteced() => Physics2D.Raycast(groundLayer.position, Vector2.down, groundCheckDistance, WhatisGround);
 public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.right * isFacingDir, wallCheckDistance, WhatisGround);
@@ -101,6 +127,8 @@ public bool IsWallDetected() => Physics2D.Raycast(wallCheck.position, Vector2.ri
        Gizmos.color = Color.blue;
       Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance , wallCheck.position.y));
     }
+
+#endregion
     public void Flip()
     {
         isFacingDir = isFacingDir * -1;
