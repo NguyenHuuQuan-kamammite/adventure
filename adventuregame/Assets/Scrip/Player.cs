@@ -33,6 +33,8 @@ public class Player : MonoBehaviour
     public PlayerDashState dashState { get; private set; }
     public PlayerWallSlideState wallSlideState { get; private set; }
    public PlyerWallJumpState wallJump { get; private set; }
+
+    public PlayerPrimaryAttack primaryAttack { get; private set; }
     #endregion
 
     private void Awake()
@@ -45,6 +47,7 @@ public class Player : MonoBehaviour
         dashState = new PlayerDashState(stateMachine, this, "Dash");
         wallSlideState = new PlayerWallSlideState(stateMachine, this, "WallSlide");
         wallJump = new PlyerWallJumpState(stateMachine, this, "Jump");
+        primaryAttack = new PlayerPrimaryAttack(stateMachine, this, "Attack");
     }
 
     private void Start()
@@ -81,7 +84,9 @@ public class Player : MonoBehaviour
             stateMachine.ChangeState(dashState);
         }
     }
-
+    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
+   
+    
 public void SetVelocity(float velocityX, float velocityY)
     {
         rb.linearVelocity= new Vector2(velocityX, velocityY);

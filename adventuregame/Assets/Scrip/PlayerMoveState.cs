@@ -16,6 +16,7 @@ public class PlayerMoveState : PlayerGroundState
     public override void Update()
     {
         base.Update();
+      
         
         player.SetVelocity( xInput* player.moveSpeed, rb.linearVelocity.y);
         if (xInput == 0 )
